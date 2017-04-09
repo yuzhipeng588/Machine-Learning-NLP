@@ -80,7 +80,7 @@ X_test=X_test_old+X_test_new
 y_train = np.append(np.zeros(len(X_train_old)),np.ones(len(X_train_new)))
 y_test = np.append(np.zeros(len(X_test_old)),np.ones(len(X_test_new)))
 
-maxlen = 500  # cut texts after this number of words (among top max_features most common words)
+maxlen = 600  # cut texts after this number of words (among top max_features most common words)
 batch_size = 64
 
 
