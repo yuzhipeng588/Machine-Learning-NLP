@@ -29,8 +29,8 @@ X_test_add=np.load("/Volumes/Zhipeng/patent_dataset/test_data_add.npy")
 y_train=np.load("/Volumes/Zhipeng/patent_dataset/train_y.npy")
 y_test=np.load("/Volumes/Zhipeng/patent_dataset/test_y.npy")
 
-max_features=20000
-#maxlen=500
+max_features=40000
+#maxlen=600
 batch_size=128
 
 print('Pad sequences (samples x time)')
@@ -44,10 +44,10 @@ print('Build model...')
 #additional model
 add_dim=len(X_train_add[0])
 add_model = Sequential()
-add_model.add(Dense(32, input_dim=add_dim, init='normal', activation='relu',W_constraint = maxnorm(2)))
+#add_model.add(Dense(32, input_dim=add_dim, init='normal', activation='relu',W_constraint = maxnorm(2)))
 
 #add_model.add(Dense(32))
-add_model.add(Dense(1))
+add_model.add(Dense(1,input_dim=add_dim))
 add_model.add(Activation('sigmoid'))
 
 # loss function and optimizer
@@ -58,13 +58,17 @@ add_model.compile(loss='binary_crossentropy',
 print('Train...')
 #model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=1,
 #          validation_data=([X_test_add,X_test], y_test))
-add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=3,
+hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=3
           )
 score, acc = add_model.evaluate(X_test_add, y_test,
                             batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
+print(hist.history)
 
+
+
+'''
 weights=[]
 for layer in add_model.layers:
     weights.append(layer.get_weights())
@@ -112,7 +116,7 @@ with open("/Users/mac/Machine-Learning-NLP/DataEngineering/PosnegOnly.json", "w"
 # serialize weights to HDF5
 add_model.save_weights("/Users/mac/Machine-Learning-NLP/DataEngineering/PosnegOnly.h5")
 print("Saved model to disk")
-
+'''
 
 '''
 # later...

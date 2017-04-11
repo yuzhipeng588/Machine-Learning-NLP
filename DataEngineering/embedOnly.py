@@ -32,8 +32,8 @@ X_test_add=np.load("/Volumes/Zhipeng/patent_dataset/test_data_add.npy")
 y_train=np.load("/Volumes/Zhipeng/patent_dataset/train_y.npy")
 y_test=np.load("/Volumes/Zhipeng/patent_dataset/test_y.npy")
 
-max_features=20000
-maxlen=500
+max_features=40000
+maxlen=600
 batch_size=128
 
 print('Pad sequences (samples x time)')
@@ -48,7 +48,7 @@ emb_model = Sequential()
 emb_model.add(Embedding(max_features, 128, input_length=maxlen,dropout=0.2))
 emb_model.add(Flatten())
 
-emb_model.add(Dense(32,init='normal', activation='relu',W_constraint = maxnorm(2)))
+#emb_model.add(Dense(32,init='normal', activation='relu',W_constraint = maxnorm(2)))
 #emb_model.add(Dropout(0.2))
 
 emb_model.add(Dense(1))
@@ -62,12 +62,18 @@ emb_model.compile(loss='binary_crossentropy',
 print('Train...')
 #model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=1,
 #          validation_data=([X_test_add,X_test], y_test))
-emb_model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=3,
+hist=emb_model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=10,
           )
 score, acc = emb_model.evaluate(X_test, y_test,
                             batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
+print(hist.history)
+import matplotlib.pyplot as plt
+plt.plot(hist.history['acc'])
+plt.ylabel('accuracy of training')
+plt.xlabel('epoch')
+plt.show()
 '''
 # serialize model to JSON
 model_json = model.to_json()

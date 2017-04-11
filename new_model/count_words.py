@@ -36,16 +36,16 @@ negword={}
 negword={k:v for k,v in wordcount.items() if v<-10}
 
 posword={}
-posword={k:v for k,v in wordcount.items() if v>100}
+posword={k:v for k,v in wordcount.items() if v>1000}
 
-f = open("negword_freq", 'w',newline='')
+f = open("/Volumes/Zhipeng/patent_dataset/negword_freq.csv", 'w',newline='')
 writer = csv.writer(f)
 writer.writerow( ('NegWord', 'Frequency' ))   
 for (k,v) in negword.items():
     writer.writerow((k,v))
 f.close()
 
-f = open("posword_freq", 'w',newline='')
+f = open("/Volumes/Zhipeng/patent_dataset/posword_freq.csv", 'w',newline='')
 writer = csv.writer(f)
 writer.writerow( ('PosWord', 'Frequency' ))   
 for (k,v) in posword.items():

@@ -12,7 +12,7 @@ from nltk.corpus import words
 import re
 
 train_shape=int(80000/2)
-test_shape=int(8000/2)
+test_shape=int(16000/2)
 
 
 # vectorize text data based on counting pos and neg words
@@ -85,7 +85,7 @@ batch_size = 64
 
 
     # 3. count vectorize text data
-max_features = 20000
+max_features = 40000
 all_words = []
 
 for text in X_train + X_test:
