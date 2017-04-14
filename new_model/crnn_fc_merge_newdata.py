@@ -73,12 +73,17 @@ model.compile(loss='binary_crossentropy',
 print('Train...')
 #model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=1,
 #          validation_data=([X_test_add,X_test], y_test))
-hist=model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=3,
+hist=model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=10,
           )
 score, acc = model.evaluate([X_test_add,X_test], y_test,
                             batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
+import matplotlib.pyplot as plt
+plt.plot(hist.history['acc'])
+plt.ylabel('accuracy of training')
+plt.xlabel('epoch')
+plt.show()
 
 '''
 from keras import backend as K
@@ -118,15 +123,23 @@ words=[rev_word_ids[i] for i in words_pos]
 '''
 
 
-'''
+
 # serialize model to JSON
 model_json = model.to_json()
-with open("/Users/mac/Desktop/machine_learning/firstmodel_test/4th_model_CRNN_merge2.json", "w") as json_file:
+with open("/Users/mac/Machine-Learning-NLP/new_model/model.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-model.save_weights("/Users/mac/Desktop/machine_learning/firstmodel_test/4th_model_CRNN_merge2.h5")
+model.save_weights("/Users/mac/Machine-Learning-NLP/new_model/model.h5")
 print("Saved model to disk")
-'''
+
+# serialize emb_model to JSON
+model_json = emb_model.to_json()
+with open("/Users/mac/Machine-Learning-NLP/new_model/emb_model.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+emb_model.save_weights("/Users/mac/Machine-Learning-NLP/new_model/emb_model.h5")
+print("Saved model to disk")
+
 
 '''
 # later...
@@ -141,9 +154,9 @@ loaded_model.load_weights("/Users/mac/Desktop/machine_learning/firstmodel_test/4
 print("Loaded model from disk")
  
 # evaluate loaded model on test data
-loaded_model.compile(loss='binary_crossentropy', optimizer='adm', metrics=['accuracy'])
-score = loaded_model.evaluate(X, Y, verbose=0)
-print "%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100)
+loaded_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+score = loaded_model.evaluate([X_test_add,X_test], y_test, verbose=0)
+print ("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))
 
 from keras import backend as K
 sess=K.get_session()

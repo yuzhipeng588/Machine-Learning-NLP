@@ -38,7 +38,7 @@ for line in open('pgpub_claims_fulltext.csv'):
             each.insert(0,parts[3:len(parts)-2])
             each.insert(0,parts[1])
             each.insert(0,parts[0])
-        elif 'claim 1' in parts[3:len(parts)-2]:
+        elif 'claim 1 ' in parts[3:len(parts)-2]:
             each.append(parts[3:len(parts)-2])
 
 # then write the results into a txt file
@@ -75,14 +75,14 @@ for line in open('patent_claims_fulltext.csv'):
                 patents.append(each)
             each=[]
         try:
-            a=float(parts[1])
+            float(parts[1])
         except ValueError:
             continue
         if float(parts[1].replace("\n", ""))==1.0:
-            each.insert(0,parts[2:len(parts)-4])
+            each.insert(0,parts[2:len(parts)-3])
             each.insert(0,float(parts[len(parts)-1].replace("\n", "")))
-        elif 'claim 1' in str(parts[2:len(parts)-4]):
-            each.append(parts[2:len(parts)-4])
+        elif 'claim 1 ' in str(','.join(parts[2:len(parts)-3])) or 'claim 1,' in str(','.join(parts[2:len(parts)-3])) or 'claim 1.' in str(','.join(parts[2:len(parts)-3])):
+            each.append(parts[2:len(parts)-3])
 
 # then write the results into a txt file        
 with open('pat_2013to2014_dep.txt','w')as f:
@@ -106,6 +106,16 @@ for line in open('pat_2013to2014_dep.txt'):
     if dictionary.has_key(float(parts[0])):
         dictionary[float(parts[0])].append(','.join(parts[1:]))
 
+'''        
+for line in patents:
+     try:
+             float(line[0])
+     except ValueError and TypeError:
+             continue
+     if dictionary.has_key(float(line[0])):
+             dictionary[float(line[0])].append('\t'.join([','.join(i) for i in line[1:] if len(i)>0 and ('claim 1.' in ','.join(i) or 'claim 1,' in ','.join(i) or 'claim 1 ' in ','.join(i) or '"1.' in ','.join(i))]))
+'''        
+        
 # create a new dictionary. store the paired claims
 new_dic={}
 for key in dictionary.keys():
@@ -115,7 +125,8 @@ for key in dictionary.keys():
 # then write the results to the txt format
 with open('1314paired_oldclaims_dep.txt','w')as f:
     for key in new_dic.keys():
-        f.write(str(key)+'\n'+new_dic[key][0]+'\n')        
+        f.write(str(key)+'\n'+new_dic[key][0]+'\n')  
+        
 with open('1314paired_newclaims_dep.txt','w') as f:
     for key in new_dic.keys():
-        f.write(str(key)+'\n'+new_dic[key][1]+'\n')
+        f.write(str(key)+'\n'+new_dic[key][1]+'\n'+'\n')

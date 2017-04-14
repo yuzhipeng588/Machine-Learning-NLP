@@ -9,6 +9,7 @@ from collections import Counter
 import numpy as np
 import csv
 from nltk.corpus import words
+from nltk.corpus import stopwords
 import re
 
 train_shape=int(80000/2)
@@ -30,28 +31,28 @@ def count_vectorize(dic,text,length):
 i=0
 X_train_new=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/paired_newclaims_dep.txt',encoding='utf-8',errors='ignore'):
-    if i%3==1 and len(line)>20:
+    if i%3==1 :
         X_train_new.append(line)
     i+=1
     
 i=0
 X_test_new=[]
-for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_newclaims_dep.txt'):
-    if i%3==1 and len(line)>20:
+for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_newclaims_dep.txt',encoding='utf-8',errors='ignore'):
+    if i%3==1:
         X_test_new.append(line)
     i+=1
 
 i=0
 X_train_old=[]
-for line in open('/Volumes/Zhipeng/patent_dataset/paired_oldclaims_dep.txt'):
-    if i%3==1 and len(line)>20:
+for line in open('/Volumes/Zhipeng/patent_dataset/paired_oldclaims_dep.txt',encoding='utf-8',errors='ignore'):
+    if i%3==1 :
         X_train_old.append(line)
     i+=1
     
 i=0
 X_test_old=[]
-for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_oldclaims_dep.txt'):
-    if i%3==1 and len(line)>20:
+for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_oldclaims_dep.txt',encoding='utf-8',errors='ignore'):
+    if i%3==1:
         X_test_old.append(line)
     i+=1
 
@@ -66,7 +67,7 @@ statistics.median(len_old)
 statistics.median(len_new)
 
 
-   
+ 
 X_test_new=X_test_new[:test_shape]   
 X_train_new=X_train_new[:train_shape]
 
@@ -89,15 +90,21 @@ max_features = 40000
 all_words = []
 
 for text in X_train + X_test:
-    all_words.extend(text.split())
+    all_words.extend(text.lower().split())
 # too slow
 #unique_words_ordered = [x[0] for x in Counter(all_words).most_common() if x[0] in words.words()]
-unique_words_ordered = [ re.sub('[^a-zA-Z]+', '', x[0]) for x in Counter(all_words).most_common() if len(re.sub('[^a-zA-Z]+', '', x[0]))>0]
+unique_words_ordered = [ re.sub('[^a-zA-Z]+', '', x[0]) for x in Counter(all_words).most_common() if re.sub('[^a-zA-Z]+', '', x[0]) not in stopwords.words('english') and len(re.sub('[^a-zA-Z]+', '', x[0]))>0]
 word_ids = {}
 rev_word_ids = {}
 for i, x in enumerate(unique_words_ordered[:max_features-1]):
     word_ids[x] = i + 1  # so we can pad with 0s
     rev_word_ids[i + 1] = x
+
+np.save('/Volumes/Zhipeng/patent_dataset/worddic.npy', word_ids) 
+np.save('/Volumes/Zhipeng/patent_dataset/revdic.npy', rev_word_ids) 
+# Load
+read_dictionary = np.load('/Volumes/Zhipeng/patent_dataset/revdic.npy').item()
+
 
 X_train_one_hot = []
 for text in X_train:

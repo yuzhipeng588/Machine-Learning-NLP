@@ -22,9 +22,7 @@ from keras.models import model_from_json
 #X_train=[]
 #X_test=[]
 
-X_train_main=np.load("/Volumes/Zhipeng/patent_dataset/train_data_main.npy")
 X_train_add=np.load("/Volumes/Zhipeng/patent_dataset/train_data_add.npy")
-X_test_main=np.load("/Volumes/Zhipeng/patent_dataset/test_data_main.npy")
 X_test_add=np.load("/Volumes/Zhipeng/patent_dataset/test_data_add.npy")
 y_train=np.load("/Volumes/Zhipeng/patent_dataset/train_y.npy")
 y_test=np.load("/Volumes/Zhipeng/patent_dataset/test_y.npy")
@@ -58,14 +56,18 @@ add_model.compile(loss='binary_crossentropy',
 print('Train...')
 #model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=1,
 #          validation_data=([X_test_add,X_test], y_test))
-hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=3
+hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=20
           )
 score, acc = add_model.evaluate(X_test_add, y_test,
                             batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
 print(hist.history)
-
+import matplotlib.pyplot as plt
+plt.plot(hist.history['acc'])
+plt.ylabel('accuracy of training')
+plt.xlabel('epoch')
+plt.show()
 
 
 '''

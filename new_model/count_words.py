@@ -21,7 +21,7 @@ for line in open('/Volumes/Zhipeng/patent_dataset/paired_newclaims_dep.txt',enco
                 wordcount[i] = 1
             else:
                 wordcount[i] += 1
-for line in open('/Volumes/Zhipeng/patent_dataset/paired_oldclaims_dep.txt'):
+for line in open('/Volumes/Zhipeng/patent_dataset/paired_oldclaims_dep.txt',encoding='utf-8',errors='ignore'):
     for i in line.lower().split():
         i=re.sub('[^a-zA-Z]+', '', i)
 #        if i not in stop and i in words.words():
