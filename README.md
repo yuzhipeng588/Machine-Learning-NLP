@@ -9,3 +9,5 @@ This project aims at providing a patent claim scoring system for patent applican
 The promotional video is available https://youtu.be/pOKLNDHdt2U
 There are several early models for testing that have been already set up.
 
+early model folder includes all the models at beginning.
+new model folder inlcludes all the current models.
