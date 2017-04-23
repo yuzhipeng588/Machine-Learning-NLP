@@ -1,10 +1,11 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 18 20:37:49 2017
+Created on Tue Apr 18 15:57:16 2017
+
 @author: mac
 """
+
 
 from __future__ import print_function
 import numpy as np
@@ -44,12 +45,12 @@ add_dim=len(X_train_add[0])
 add_model = Sequential()
 #add_model.add(Dense(32, input_dim=add_dim, init='normal', activation='relu',W_constraint = maxnorm(2)))
 #add_model.add(Dropout(0.2))
-#add_model.add(Dense(1))
+#add_model.add(Dense(3))
 add_model.add(Dense(3,input_dim=add_dim))
-add_model.add(Activation('sigmoid'))
+add_model.add(Activation('softmax'))
 
 # loss function and optimizer
-add_model.compile(loss='binary_crossentropy',
+add_model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
