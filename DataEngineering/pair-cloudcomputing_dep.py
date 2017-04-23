@@ -97,11 +97,11 @@ with open('pat_2013to2014_dep.txt','w')as f:
 
 # then pair the first claim with same application id. 
 dictionary={}
-for line in open('pub_2013to2014_dep.txt'):
+for line in open('pub_2012to2013_dep.txt'):
     parts = line.split(',')
     dictionary[float(parts[1])]=[','.join(parts[2:len(parts)])]
 
-for line in open('pat_2013to2014_dep.txt'):
+for line in open('pat_2012to2013_dep.txt'):
     parts=line.split(',')
     if dictionary.has_key(float(parts[0])):
         dictionary[float(parts[0])].append(','.join(parts[1:]))
@@ -119,8 +119,9 @@ for line in patents:
 # create a new dictionary. store the paired claims
 new_dic={}
 for key in dictionary.keys():
-    if len(dictionary[key])>1:
-        new_dic[key]=dictionary[key]
+    if len(dictionary[key])>1 :#and len(dictionary[key][0])==len(dictionary[key][1]):
+        if dictionary[key][0]!=dictionary[key][1]:
+            new_dic[key]=dictionary[key]
 
 # then write the results to the txt format
 with open('1314paired_oldclaims_dep.txt','w')as f:
@@ -130,3 +131,8 @@ with open('1314paired_oldclaims_dep.txt','w')as f:
 with open('1314paired_newclaims_dep.txt','w') as f:
     for key in new_dic.keys():
         f.write(str(key)+'\n'+new_dic[key][1]+'\n'+'\n')
+
+with open('1314cancled_dep.txt','w') as f:
+    for key in dictionary.keys():
+        if len(dictionary[key])==1:
+            f.write(str(key)+'\n'+dictionary[key][0]+'\n')

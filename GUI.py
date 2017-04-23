@@ -10,6 +10,7 @@ import tkinter
 from tkinter import ttk,Text
 from collections import Counter
 import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 from keras import backend as K
 
@@ -54,6 +55,14 @@ class Adder(ttk.Frame):
         # display
         self.answer_label['text'] = score
         
+        # get similar patent ID
+        cur_claim=self.vectorizer.transform(inputvalue)
+        sim=(cur_claim*self.X.T).A
+        top10_index=np.argsort(sim)[0][-10:-1]
+
+        top10_id=[self.his_id[i] for i in top10_index[::-1]]
+        self.sim_label['text'] = ','.join(top10_id)
+
         # get pos and words
         self.pos_words,self.neg_words = self.get_weightedWords(X_main)
         
@@ -134,6 +143,7 @@ class Adder(ttk.Frame):
             words_weights.append(np.dot(item,weight_emb[index*128:min(len(weight_emb),index*128+128)]))
             
         words_weights=np.array(words_weights)
+        words_weights=words_weights[:,2]
         words_weights=np.reshape(words_weights,words_weights.shape[0])
         
         # sort and know where is important for a given claim
@@ -194,7 +204,7 @@ class Adder(ttk.Frame):
         
         # load weights into new model
         self.model.load_weights("/Users/mac/Machine-Learning-NLP/new_model/model.h5")
-        self.model_status['text'] = "Model Loaded from disk"
+        self.change_status("Model Loaded from disk")
         
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])       
 
@@ -206,7 +216,23 @@ class Adder(ttk.Frame):
         
         # load weights into new model
         self.emb_model.load_weights("/Users/mac/Machine-Learning-NLP/new_model/emb_model.h5")
-        self.model_status['text'] = "Model Loaded and Compiled"
+        self.change_status("Model Loaded and Compiled")
+        
+        # load similarity check part
+        i=0
+        his_data=[]
+        for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_newclaims_dep.txt',encoding='utf-8',errors='ignore'):
+            if i%3==0:
+                his_data.append([line])
+            elif i%3==1:
+                his_data[-1].append(line)
+            i+=1
+        self.his_id=[item[0] for item in his_data]
+        self.vectorizer = TfidfVectorizer(min_df=1)
+        self.X=self.vectorizer.fit_transform([item[1] for item in his_data])
+        self.change_status("Similarity Ready. All Done.")
+    def change_status(self,text):
+        self.model_status['text'] = text
     def init_gui(self):
         """Builds GUI."""
         self.root.title('Patent Claim Scoring System')
@@ -246,23 +272,31 @@ class Adder(ttk.Frame):
         
         # Add text box to collect input
         self.textbox = Text(self, height=20, width=60)
-        self.textbox.grid(row=3,column=0, columnspan=4)
+        self.textbox.grid(row=3,column=0, columnspan=4,rowspan=4)
         
         # Add Test button
         self.calc_button = ttk.Button(self, text='Test',
                 command=self.calculate)
-        self.calc_button.grid(row=4, columnspan=4)
+        self.calc_button.grid(row=8, columnspan=4)
+        
+         # Add label to show top ten most similar patent claims
+        self.sim_frame = ttk.LabelFrame(self, text='Top 10 Similar Patent Application ID:',
+                height=100)
+        self.sim_frame.grid(column=5, row=3, columnspan=4, sticky='nesw')
+
+        self.sim_label = ttk.Label(self.sim_frame, text='')
+        self.sim_label.grid(column=6, row=4)
         
          # Add label to show score
         self.answer_frame = ttk.LabelFrame(self, text='Score',
                 height=100)
-        self.answer_frame.grid(column=0, row=5, columnspan=4, sticky='nesw')
+        self.answer_frame.grid(column=0, row=9, columnspan=4, sticky='nesw')
 
         self.answer_label = ttk.Label(self.answer_frame, text='')
-        self.answer_label.grid(column=5, row=5)
+        self.answer_label.grid(column=5, row=9)
         
         ttk.Separator(self, orient='horizontal').grid(column=0,
-                row=5, columnspan=9, sticky='ew')
+                row=9, columnspan=9, sticky='ew')
         for child in self.winfo_children():
             child.grid_configure(padx=5, pady=5)
 

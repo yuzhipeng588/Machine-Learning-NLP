@@ -51,11 +51,11 @@ emb_model.add(Flatten())
 #emb_model.add(Dense(32,init='normal', activation='relu',W_constraint = maxnorm(2)))
 #emb_model.add(Dropout(0.2))
 
-emb_model.add(Dense(1))
-emb_model.add(Activation('sigmoid'))
+emb_model.add(Dense(3))
+emb_model.add(Activation('softmax'))
 
 # loss function and optimizer
-emb_model.compile(loss='binary_crossentropy',
+emb_model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
@@ -68,12 +68,17 @@ score, acc = emb_model.evaluate(X_test, y_test,
                             batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
-print(hist.history)
+#print(hist.history)
 import matplotlib.pyplot as plt
 plt.plot(hist.history['acc'])
 plt.ylabel('accuracy of training')
 plt.xlabel('epoch')
 plt.show()
+y_pred=emb_model.predict(X_test)
+y_pred=np.argmax(y_pred, axis=1)
+y_true=np.argmax(y_test,axis=1)
+from sklearn.metrics import confusion_matrix
+confusion_matrix(y_true, y_pred)
 '''
 # serialize model to JSON
 model_json = model.to_json()

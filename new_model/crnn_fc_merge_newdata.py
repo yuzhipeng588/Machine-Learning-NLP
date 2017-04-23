@@ -62,11 +62,11 @@ add_model.add(Dense(32, input_dim=add_dim, init='normal', activation='relu',W_co
 model = Sequential()
 model.add(Merge([add_model, emb_model], mode='concat', concat_axis=1))
 #model.add(Dense(32))
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
+model.add(Dense(3))
+model.add(Activation('softmax'))
 
 # loss function and optimizer
-model.compile(loss='binary_crossentropy',
+model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 

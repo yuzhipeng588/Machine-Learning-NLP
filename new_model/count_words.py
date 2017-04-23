@@ -33,10 +33,10 @@ for line in open('/Volumes/Zhipeng/patent_dataset/paired_oldclaims_dep.txt',enco
 
 
 negword={}
-negword={k:v for k,v in wordcount.items() if v<-10}
+negword={k:v for k,v in wordcount.items() if v<-1 and k in words.words()}
 
 posword={}
-posword={k:v for k,v in wordcount.items() if v>1000}
+posword={k:v for k,v in wordcount.items() if v>1000 and k in words.words()}
 
 f = open("/Volumes/Zhipeng/patent_dataset/negword_freq.csv", 'w',newline='')
 writer = csv.writer(f)

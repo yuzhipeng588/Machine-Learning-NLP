@@ -43,9 +43,9 @@ print('Build model...')
 add_dim=len(X_train_add[0])
 add_model = Sequential()
 #add_model.add(Dense(32, input_dim=add_dim, init='normal', activation='relu',W_constraint = maxnorm(2)))
-
-#add_model.add(Dense(32))
-add_model.add(Dense(1,input_dim=add_dim))
+#add_model.add(Dropout(0.2))
+#add_model.add(Dense(1))
+add_model.add(Dense(3,input_dim=add_dim))
 add_model.add(Activation('sigmoid'))
 
 # loss function and optimizer
@@ -56,13 +56,13 @@ add_model.compile(loss='binary_crossentropy',
 print('Train...')
 #model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=1,
 #          validation_data=([X_test_add,X_test], y_test))
-hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=20
+hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=5
           )
 score, acc = add_model.evaluate(X_test_add, y_test,
                             batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
-print(hist.history)
+#print(hist.history)
 import matplotlib.pyplot as plt
 plt.plot(hist.history['acc'])
 plt.ylabel('accuracy of training')
@@ -70,14 +70,15 @@ plt.xlabel('epoch')
 plt.show()
 
 
-'''
+
 weights=[]
 for layer in add_model.layers:
     weights.append(layer.get_weights())
-weightall=np.dot(weights[0][0],weights[1][0])
+weightall= np.array(weights[0][0])
 weightall=np.reshape(weightall,weightall.shape[0])
 
 weight_sorted=np.argsort(weightall)
+weight_sortedvalue=np.sort(weightall)
 
 negwords=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/negword_freq.csv'):
@@ -90,15 +91,33 @@ for line in open('/Volumes/Zhipeng/patent_dataset/posword_freq.csv'):
     poswords.append(parts[0])
     
 negposwords=negwords+poswords
-negwords_sorted=[negposwords[i] for i in weight_sorted[::-1] if i<len(negwords)]
-poswords_sorted=[negposwords[i] for i in weight_sorted[::-1] if i>=len(negwords)]
+negwords_sorted=[[negposwords[i],weight_sortedvalue[index]] for index,i in enumerate(weight_sorted) if i<len(negwords)]
+poswords_sorted=[[negposwords[i],weight_sortedvalue[::-1][index]] for index,i in enumerate(weight_sorted[::-1]) if i<len(negwords)]
+
+f = open("/Volumes/Zhipeng/patent_dataset/negword_importances_weight.csv", 'w',newline='')
+writer = csv.writer(f)
+writer.writerow( ('NegWord', 'Weight' ))  
+i=0
+for k in negwords_sorted:
+    writer.writerow((k[0],k[1]))
+    i+=1
+f.close()
+
+f = open("/Volumes/Zhipeng/patent_dataset/posword_importances_weight.csv", 'w',newline='')
+writer = csv.writer(f)
+writer.writerow( ('PosWord', 'Weight' ))  
+i=0
+for k in poswords_sorted:
+    writer.writerow((k[0],k[1]))
+    i+=1
+f.close()
 
 f = open("/Volumes/Zhipeng/patent_dataset/negword_importances.csv", 'w',newline='')
 writer = csv.writer(f)
 writer.writerow( ('NegWord', 'Rank' ))  
 i=1 
 for k in negwords_sorted:
-    writer.writerow((k,i))
+    writer.writerow((k[0],i))
     i+=1
 f.close()
 
@@ -107,10 +126,11 @@ writer = csv.writer(f)
 writer.writerow( ('PosWord', 'Rank' ))  
 i=1 
 for k in poswords_sorted:
-    writer.writerow((k,i))
+    writer.writerow((k[0],i))
     i+=1
 f.close()
 
+'''
 # serialize model to JSON
 add_model_json = add_model.to_json()
 with open("/Users/mac/Machine-Learning-NLP/DataEngineering/PosnegOnly.json", "w") as json_file:
