@@ -3,7 +3,7 @@
 """
 Created on Mon Feb 13 15:59:41 2017
 
-@author: mac
+@author: Zhipeng Yu
 """
 from collections import Counter
 import numpy as np

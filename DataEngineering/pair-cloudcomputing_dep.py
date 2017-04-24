@@ -3,7 +3,7 @@
 """
 Created on Wed Mar  1 00:33:26 2017
 
-@author: mac
+@author: Zhipeng Yu
 """
 
 i=0

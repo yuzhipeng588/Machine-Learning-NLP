@@ -3,7 +3,7 @@
 """
 Created on Fri Feb 10 15:58:46 2017
 
-@author: mac
+@author: Zhipeng Yu
 """
 from nltk.corpus import stopwords
 import re

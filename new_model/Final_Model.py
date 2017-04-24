@@ -3,7 +3,7 @@
 """
 Created on Mon Feb 13 17:03:41 2017
 
-@author: mac
+@author: Zhipeng Yu
 """
 from __future__ import print_function
 import numpy as np
