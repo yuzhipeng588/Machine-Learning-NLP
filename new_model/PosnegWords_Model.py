@@ -57,7 +57,7 @@ add_model.compile(loss='categorical_crossentropy',
 print('Train...')
 #model.fit([X_train_add,X_train], y_train, batch_size=batch_size, nb_epoch=1,
 #          validation_data=([X_test_add,X_test], y_test))
-hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=5
+hist=add_model.fit(X_train_add, y_train, batch_size=batch_size, nb_epoch=10
           )
 score, acc = add_model.evaluate(X_test_add, y_test,
                             batch_size=batch_size)
@@ -75,7 +75,7 @@ plt.show()
 weights=[]
 for layer in add_model.layers:
     weights.append(layer.get_weights())
-weightall= np.array(weights[0][0])
+weightall= np.array(weights[0][0][:,2])
 weightall=np.reshape(weightall,weightall.shape[0])
 
 weight_sorted=np.argsort(weightall)

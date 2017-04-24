@@ -3,7 +3,7 @@
 """
 Created on Tue Apr 11 10:15:32 2017
 
-@author: mac
+@author: Zhipeng Yu
 """
 from __future__ import print_function
 import tkinter
@@ -206,7 +206,7 @@ class Adder(ttk.Frame):
         self.model.load_weights("/Users/mac/Machine-Learning-NLP/new_model/model.h5")
         self.change_status("Model Loaded from disk")
         
-        self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])       
+        self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])       
 
         # load json and create model
         json_file = open('/Users/mac/Machine-Learning-NLP/new_model/emb_model.json', 'r')

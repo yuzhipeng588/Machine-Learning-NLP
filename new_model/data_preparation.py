@@ -12,8 +12,8 @@ from nltk.corpus import words
 from nltk.corpus import stopwords
 import re
 
-train_shape=int(90000/3)
-test_shape=int(9000/3)
+train_shape=int(90000)
+test_shape=int(9000)
 
 # vectorize text data based on counting pos and neg words
 def count_vectorize(dic,text,length):
@@ -31,14 +31,14 @@ i=0
 X_train_new=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/paired_newclaims_dep.txt',encoding='utf-8',errors='ignore'):
     if i%3==1 :
-        X_train_new.append(line)
+        X_train_new.append([line,2])
     i+=1
     
 i=0
 X_test_new=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_newclaims_dep.txt',encoding='utf-8',errors='ignore'):
     if i%3==1:
-        X_test_new.append(line)
+        X_test_new.append([line,2])
     i+=1
     
     
@@ -46,7 +46,7 @@ i=0
 X_train_old=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/paired_oldclaims_dep.txt',encoding='utf-8',errors='ignore'):
     if i%3==1:
-        X_train_old.append(line)
+        X_train_old.append([line,1])
     i+=1
 
     
@@ -54,27 +54,27 @@ i=0
 X_test_old=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/1314paired_oldclaims_dep.txt',encoding='utf-8',errors='ignore'):
     if i%3==1:
-        X_test_old.append(line)
+        X_test_old.append([line,1])
     i+=1
 
 i=0
 X_train_can=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/paired_cancledclaims_dep.txt',encoding='utf-8',errors='ignore'):
     if i%3==1:
-        X_train_can.append(line)
+        X_train_can.append([line,0])
     i+=1
     
 i=0
 X_test_can=[]
 for line in open('/Volumes/Zhipeng/patent_dataset/1314cancled_dep.txt',encoding='utf-8',errors='ignore'):
     if i%3==1:
-        X_test_can.append(line)
+        X_test_can.append([line,0])
     i+=1
 # analyze the number of words in old and new claims    
   
-len_new=[len(line.split()) for line in X_train_new]
-len_old=[len(line.split()) for line in X_train_old]
-len_can=[len(line.split()) for line in X_train_can]
+len_new=[len(line[0].split()) for line in X_train_new]
+len_old=[len(line[0].split()) for line in X_train_old]
+len_can=[len(line[0].split()) for line in X_train_can]
 import statistics
 statistics.mean(len_old)
 statistics.mean(len_new)
@@ -83,7 +83,7 @@ statistics.median(len_old)
 statistics.median(len_new)
 statistics.median(len_can)
 
-
+'''
 np.random.shuffle(X_test_new)
 X_test_new=X_test_new[:test_shape] 
 np.random.shuffle(X_train_new)
@@ -108,6 +108,22 @@ X_test=X_test_can+X_test_old+X_test_new
 y_train=len(X_train_can)*[[1,0,0]]+len(X_train_old)*[[0,1,0]]+len(X_train_new)*[[0,0,1]]
 
 y_test=len(X_test_can)*[[1,0,0]]+len(X_test_old)*[[0,1,0]]+len(X_test_new)*[[0,0,1]]
+'''
+X_train=X_train_can+X_train_old+X_train_new
+X_test=X_test_can+X_test_old+X_test_new
+np.random.shuffle(X_train)
+np.random.shuffle(X_test)
+
+y_train=[item[1] for item in X_train[:train_shape]]
+y_test=[item[1] for item in X_test[:test_shape]]
+
+dic={0:[1,0,0],1:[0,1,0],2:[0,0,1]}
+y_train=[dic[i] for i in y_train]
+y_test=[dic[i] for i in y_test]
+
+X_train=[item[0] for item in X_train[:train_shape]]
+X_test=[item[0] for item in X_test[:test_shape]]
+
 
 maxlen = 600  # cut texts after this number of words (among top max_features most common words)
 batch_size = 64

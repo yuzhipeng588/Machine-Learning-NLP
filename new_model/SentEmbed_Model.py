@@ -74,11 +74,13 @@ plt.plot(hist.history['acc'])
 plt.ylabel('accuracy of training')
 plt.xlabel('epoch')
 plt.show()
+'''
 y_pred=emb_model.predict(X_test)
 y_pred=np.argmax(y_pred, axis=1)
 y_true=np.argmax(y_test,axis=1)
 from sklearn.metrics import confusion_matrix
 confusion_matrix(y_true, y_pred)
+'''
 '''
 # serialize model to JSON
 model_json = model.to_json()

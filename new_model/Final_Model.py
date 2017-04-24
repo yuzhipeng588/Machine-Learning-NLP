@@ -85,6 +85,9 @@ plt.ylabel('accuracy of training')
 plt.xlabel('epoch')
 plt.show()
 
+#from sklearn.metrics import confusion_matrix
+#y_pred=np.argmax(y_pred,axis=1)
+#confusion_matrix(y_true, y_pred)
 '''
 from keras import backend as K
 
