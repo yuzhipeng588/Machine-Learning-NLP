@@ -53,15 +53,15 @@ class Adder(ttk.Frame):
         # predict 
         score = self.model.predict([X_add,X_main])
         # display
-        self.answer_label['text'] = score
+        self.answer_label['text'] = ','.join([''.join(str(item)) for item in score])
         
         # get similar patent ID
         cur_claim=self.vectorizer.transform(inputvalue)
         sim=(cur_claim*self.X.T).A
         top10_index=np.argsort(sim)[0][-10:-1]
 
-        top10_id=[self.his_id[i] for i in top10_index[::-1]]
-        self.sim_label['text'] = ','.join(top10_id)
+        top10_id=[self.his_id[i][:-3] for i in top10_index[::-1]]
+        self.sim_label['text'] = '\n'.join(top10_id)
 
         # get pos and words
         self.pos_words,self.neg_words = self.get_weightedWords(X_main)
@@ -87,7 +87,7 @@ class Adder(ttk.Frame):
                 print(beg,end)
                 if len(beg)!=0 and len(end)!=0:
                     self.textbox.tag_add("pos", beg, end)
-                    self.textbox.tag_config("pos", background="red", foreground="blue")
+                    self.textbox.tag_config("pos", background="green", foreground="black")
         
         #  draw color to neg words
         if len(self.neg_words) == 0:
@@ -103,7 +103,7 @@ class Adder(ttk.Frame):
                 print(beg,end)
                 if len(beg)!=0 and len(end)!=0:
                     self.textbox.tag_add("neg", beg, end)
-                    self.textbox.tag_config("neg", background="green", foreground="yellow")
+                    self.textbox.tag_config("neg", background="red", foreground="black")
 
     # get line.column expression given the index position of the words
     def getTextIndex(self,num):
