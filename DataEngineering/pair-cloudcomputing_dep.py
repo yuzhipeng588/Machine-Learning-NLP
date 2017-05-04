@@ -1,11 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Patent Claim Scoring System
+Functionality:
+    Pair granted claims between publications and patents datasets 
+    Get three types of claims:
+        1.cancled
+        2.granted after modifications
+        3.granted directly
+@author: Zhipeng Yu
+Input:'pgpub_claims_fulltext.csv' and 'pub_2013to2014_dep.txt'
+        (available in https://www.uspto.gov/learning-and-resources/electronic-data-products/patent-claims-research-dataset)
+Limitaion: need large memory
+Linux Kernel (3.12.2) on Lee Flemaing's lab server
+Python 2.7 NumPy 1.12.1
+Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
+256GB SSD 
+Run Time: O(n) because it needs to traverse the whole file once. 
+
+
+"""
+"""
 Created on Wed Mar  1 00:33:26 2017
 
 @author: Zhipeng Yu
 """
 
+# open publication file and extract application id, text content, dependent claims for any 
+# independent claim in 2013 to 2014
 i=0
 results=[]
 patID=0.0
@@ -16,7 +38,7 @@ for line in open('pgpub_claims_fulltext.csv'):
         i+=1
         continue
     #parts[0] is patent id and the first four digits indicate the year.
-    #And we pick out patents from 2012 to 2013
+    #And we pick out patents from 2013 to 2014
     try:
         a=float(parts[0])
     except ValueError:
