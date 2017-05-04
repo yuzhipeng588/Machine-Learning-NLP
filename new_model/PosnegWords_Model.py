@@ -1,6 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+
 """
+Patent Claim Scoring System
+Functionality:
+    1.Train the model only using word level features(positive and negative words)
+    2.Generate weight for each positive and negative word and save it to the disk
+@author: Zhipeng Yu
+Input:  
+    1.training data:'train_data_add.npy','train_y.npy'
+    2.testing data:'test_data_add.npy','test_y.npy'
+
+macOS 10.12.4
+Python 3.5 NumPy 1.11.2 h5py 2.6.0 Keras 1.1.0 tensorflow 0.10.0
+Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
+256GB SSD 
+Run Time: 3s per epoch for training
+
+
 Created on Tue Apr 18 15:57:16 2017
 
 @author: Zhipeng Yu

@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
+Patent Claim Scoring System
+Functionality:
+    Train the model only using sentence level features
+@author: Zhipeng Yu
+Input:  
+    1.training data:'train_data_main.npy','train_y.npy'
+    2.testing data:'test_data_main.npy','test_y.npy'
+
+macOS 10.12.4
+Python 3.5 NumPy 1.11.2 scikit-learn 0.18 h5py 2.6.0 Keras 1.1.0 tensorflow 0.10.0
+Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
+256GB SSD 
+Run Time: 150s per epoch for training
+
 Created on Sun Apr  2 17:23:24 2017
 
 @author: Zhipeng Yu
@@ -9,26 +24,18 @@ Created on Sun Apr  2 17:23:24 2017
 from __future__ import print_function
 import numpy as np
 np.random.seed(1337)  # for reproducibility
-import tensorflow as tf
 from keras.preprocessing import sequence
-from keras.utils import np_utils
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Embedding,Flatten
-from keras.layers import LSTM, SimpleRNN, GRU
-from keras.layers.convolutional import Convolution1D
-from keras.layers.convolutional import MaxPooling1D
 from keras.constraints import maxnorm
-from keras.engine.topology import Merge
-from sklearn.preprocessing import Imputer
 from keras.models import model_from_json
 
-#X_train=[]
-#X_test=[]
+
 
 X_train_main=np.load("/Volumes/Zhipeng/patent_dataset/train_data_main.npy")
-X_train_add=np.load("/Volumes/Zhipeng/patent_dataset/train_data_add.npy")
+#X_train_add=np.load("/Volumes/Zhipeng/patent_dataset/train_data_add.npy")
 X_test_main=np.load("/Volumes/Zhipeng/patent_dataset/test_data_main.npy")
-X_test_add=np.load("/Volumes/Zhipeng/patent_dataset/test_data_add.npy")
+#X_test_add=np.load("/Volumes/Zhipeng/patent_dataset/test_data_add.npy")
 y_train=np.load("/Volumes/Zhipeng/patent_dataset/train_y.npy")
 y_test=np.load("/Volumes/Zhipeng/patent_dataset/test_y.npy")
 
@@ -80,18 +87,7 @@ y_pred=np.argmax(y_pred, axis=1)
 y_true=np.argmax(y_test,axis=1)
 from sklearn.metrics import confusion_matrix
 confusion_matrix(y_true, y_pred)
-'''
-'''
-# serialize model to JSON
-model_json = model.to_json()
-with open("/Users/mac/Desktop/machine_learning/firstmodel_test/4th_model_CRNN_merge2.json", "w") as json_file:
-    json_file.write(model_json)
-# serialize weights to HDF5
-model.save_weights("/Users/mac/Desktop/machine_learning/firstmodel_test/4th_model_CRNN_merge2.h5")
-print("Saved model to disk")
-'''
 
-'''
 # later...
  
 # load json and create model

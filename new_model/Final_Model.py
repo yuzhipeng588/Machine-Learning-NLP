@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Patent Claim Scoring System
+Functionality:
+    1.Train the model using both sentence level features and word level features(positive and negative words)
+@author: Zhipeng Yu
+Input:  
+    1.training data:'train_data_add.npy','train_data_main.npy','train_y.npy'
+    2.testing data:'test_data_add.npy','test_data_main.npy','test_y.npy'
+
+macOS 10.12.4
+Python 3.5 NumPy 1.11.2 h5py 2.6.0 Keras 1.1.0 tensorflow 0.10.0
+Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
+256GB SSD 
+Run Time: 150s per epoch for training
+
 Created on Mon Feb 13 17:03:41 2017
 
 @author: Zhipeng Yu
@@ -12,13 +26,11 @@ import tensorflow as tf
 from keras.preprocessing import sequence
 from keras.utils import np_utils
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Embedding
-from keras.layers import LSTM, SimpleRNN, GRU,Flatten
-from keras.layers.convolutional import Convolution1D
-from keras.layers.convolutional import MaxPooling1D
+from keras.layers import Dense, Dropout, Activation, Embedding,Flatten
+
 from keras.constraints import maxnorm
 from keras.engine.topology import Merge
-from sklearn.preprocessing import Imputer
+
 from keras.models import model_from_json
 
 #X_train=[]

@@ -18,9 +18,6 @@ Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
 256GB SSD 
 Run Time: O(n) because it needs to traverse the whole file once. 
 
-
-"""
-"""
 Created on Wed Mar  1 00:33:26 2017
 
 @author: Zhipeng Yu

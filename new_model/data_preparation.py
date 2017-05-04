@@ -1,21 +1,46 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Patent Claim Scoring System
+Functionality:
+    Prepareing numerical training data and tesing data for the model
+    Save word dictionary and reversed word dictionary for sentence level features
+@author: Zhipeng Yu
+Input:  
+    1.raw training data :'paired_oldclaims_dep.txt','paired_newclaims_dep.txt',paired_cancledclaims_dep.txt
+    2.raw testing data  :'1314paired_newclaims_dep.txt','1314paired_oldclaims_dep.txt','1314cancled_dep.txt'
+
+Output:
+    numerical training and testing data
+macOS 10.12.4
+Python 3.5 NumPy 1.11.2  nltk 3.2.1 collections
+Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
+256GB SSD 
+Run Time: O(n)
 Created on Mon Feb 13 15:59:41 2017
 
 @author: Zhipeng Yu
 """
 from collections import Counter
 import numpy as np
-import csv
-from nltk.corpus import words
 from nltk.corpus import stopwords
 import re
 
+# size of training set and testing set
 train_shape=int(90000)
 test_shape=int(9000)
 
-# vectorize text data based on counting pos and neg words
+'''
+    Function:count_vectorize
+    Vectorize text data based on counting pos and neg words
+    Parameters:
+        dictionary of word
+        claim text
+        maxium length
+    Output:
+        vectorized claim 
+        
+'''
 def count_vectorize(dic,text,length):
     wordcount=Counter(text.split())
     wordvector=[0]*length
@@ -70,45 +95,9 @@ for line in open('/Volumes/Zhipeng/patent_dataset/1314cancled_dep.txt',encoding=
     if i%3==1:
         X_test_can.append([line,0])
     i+=1
-# analyze the number of words in old and new claims    
-  
-len_new=[len(line[0].split()) for line in X_train_new]
-len_old=[len(line[0].split()) for line in X_train_old]
-len_can=[len(line[0].split()) for line in X_train_can]
-import statistics
-statistics.mean(len_old)
-statistics.mean(len_new)
-statistics.mean(len_can)
-statistics.median(len_old)
-statistics.median(len_new)
-statistics.median(len_can)
 
-'''
-np.random.shuffle(X_test_new)
-X_test_new=X_test_new[:test_shape] 
-np.random.shuffle(X_train_new)
-X_train_new=X_train_new[:train_shape]
 
-np.random.shuffle(X_test_can)
-X_test_can=X_test_can[:test_shape]
-np.random.shuffle(X_train_can)
-X_train_can=X_train_can[:train_shape]
-
-np.random.shuffle(X_test_old)
-X_test_old=X_test_old[:test_shape]
-np.random.shuffle(X_train_old)
-X_train_old=X_train_old[:train_shape]
-
-X_train=X_train_can+X_train_old+X_train_new
-X_test=X_test_can+X_test_old+X_test_new
-
-    # 2. give '0' and '1' to y_train and y_test
-#y_train = np.append(np.zeros(len(X_train_old)),np.ones(len(X_train_new)))
-#y_test = np.append(np.zeros(len(X_test_old)),np.ones(len(X_test_new)))
-y_train=len(X_train_can)*[[1,0,0]]+len(X_train_old)*[[0,1,0]]+len(X_train_new)*[[0,0,1]]
-
-y_test=len(X_test_can)*[[1,0,0]]+len(X_test_old)*[[0,1,0]]+len(X_test_new)*[[0,0,1]]
-'''
+    # 2. shuffle the training and testing data and pick out the first 90,000 and 9,000 respectively
 X_train=X_train_can+X_train_old+X_train_new
 X_test=X_test_can+X_test_old+X_test_new
 np.random.shuffle(X_train)
@@ -135,8 +124,7 @@ all_words = []
 
 for text in X_train + X_test:
     all_words.extend(text.lower().split())
-# too slow
-#unique_words_ordered = [x[0] for x in Counter(all_words).most_common() if x[0] in words.words()]
+
 unique_words_ordered = [ re.sub('[^a-zA-Z]+', '', x[0]) for x in Counter(all_words).most_common() if re.sub('[^a-zA-Z]+', '', x[0]) not in stopwords.words('english') and len(re.sub('[^a-zA-Z]+', '', x[0]))>0]
 word_ids = {}
 rev_word_ids = {}
@@ -146,10 +134,10 @@ for i, x in enumerate(unique_words_ordered[:max_features-1]):
 
 np.save('/Volumes/Zhipeng/patent_dataset/worddic.npy', word_ids) 
 np.save('/Volumes/Zhipeng/patent_dataset/revdic.npy', rev_word_ids) 
-# Load
+    # Load
 read_dictionary = np.load('/Volumes/Zhipeng/patent_dataset/revdic.npy').item()
 
-
+    # 4. one hot transformation
 X_train_one_hot = []
 for text in X_train:
     t_ids = [word_ids[re.sub('[^a-zA-Z]+', '', x)] if re.sub('[^a-zA-Z]+', '', x) in word_ids else 0 for x in text.split()]

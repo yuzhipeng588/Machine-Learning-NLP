@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Patent Claim Scoring System
+Functionality:
+    Provide a GUI for our tool
+@author: Zhipeng Yu
+Input:  
+    1.previously saved machine learning model: 'model.json', 'model.h5','emb_model.json','emb_model.h5'
+    2.negative and positive word list for word level features: 'negword_freq.csv' and 'posword_freq.csv'
+    3.word dictionary and reversed word dictionary for sentence level features:'revdic.npy','worddic.npy'
+    4.claim text for calculating similiary scores:'1314paired_newclaims_dep.txt'
+
+Linux Kernel (3.12.2) on Lee Flemaing's lab server
+Python 3.5 NumPy 1.11.2 scikit-learn 0.18 tkinter 8.5.18 h5py 2.6.0 Keras 1.1.0 tensorflow 0.10.0
+Hardware Environment, Intel 2 GHz Intel Core i7, 8 GB 1600 MHz DDR3,
+256GB SSD 
+
 Created on Tue Apr 11 10:15:32 2017
 
 @author: Zhipeng Yu
